@@ -1,0 +1,879 @@
+---
+title: "Team ShortTeas"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: sandstone
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(knitr)
+library(shiny)
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(readr)
+library(readxl)
+library(ggpubr)
+library(ggridges)
+```
+
+```{r data}
+china <- read.csv(file = "./chinaalc.csv", header = TRUE, sep = ",")
+india <- read.csv(file = "./indiaalc.csv", header = TRUE, sep = ",")
+japan <- read.csv(file = "./japanalc.csv", header = TRUE, sep = ",")
+oman <- read.csv(file = "./omanalc.csv", header = TRUE, sep = ",")
+kor <- read.csv(file = "./koralc.csv", header = TRUE, sep = ",")
+singapore <- read.csv(file = "./singalc.csv", header = TRUE, sep = ",")
+
+countries <- read.csv(file = "./short.csv", header = TRUE, sep = ",")
+
+dataF = read.csv("./EditedValues.csv");
+dch = subset(dataF,dataF$Country == "China");
+din = subset(dataF,dataF$Country == "India");
+djp = subset(dataF,dataF$Country == "Japan");
+dom = subset(dataF,dataF$Country == "Oman");
+dkr = subset(dataF,dataF$Country == "Republic of Korea");
+dsg = subset(dataF,dataF$Country == "Singapore");
+
+
+```
+
+Life Expectancy
+=====================================  
+
+### Choropleth Map
+    
+```{r}
+df = read.csv(file = "./shorthm.csv", header = TRUE, sep = ",") %>%
+  inner_join(countries, by.x = Abbreviation, by.y=Abbreviation) %>%
+  select(Year, Abbreviation, Life)
+graph = plot_geo(df,
+                 locationmode = df['Abbreviation'],
+                 frame = ~Year) %>%
+  add_trace(locations = ~Abbreviation,
+            z = ~Life,
+            color = ~Life) %>%
+  layout(geo = list(scope = 'asia'))
+graph
+```
+   
+Avg Alcohol Consumption
+=====================================     
+Column {.tabset} 
+-----------------------------------------------------------------------
+### China
+    
+```{r}
+  ggplot(china, aes(x = Alcohol, y = Year, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis_c(name = "Alcohol in L", option = "C")+
+  coord_cartesian(clip = "off") + 
+  theme_minimal()+
+  labs(title = "Average alcohol consumption per person (in L)", 
+         caption = "A:2000 ; B:2001 ; C:2002 ; D:2003 ; E:2004 ; F:2005 ; G:2006 ; H:2007\n I: 2008 ; J:2009 ; K:2010 ; L:2011; M:2012 ; N:2013 ; O:2014 ; P:2015")
+```
+
+### India
+    
+```{r}
+ggplot(india, aes(x = Alcohol, y = Year, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis_c(name = "Alcohol in L", option = "C")+
+  coord_cartesian(clip = "off") + 
+  theme_minimal()+
+  labs(title = "Average alcohol consumption per person (in L)", 
+       caption = "A:2000 ; B:2001 ; C:2002 ; D:2003 ; E:2004 ; F:2005 ; G:2006 ; H:2007\n I: 2008 ; J:2009 ; K:2010 ; L:2011; M:2012 ; N:2013 ; O:2014 ; P:2015")
+```
+
+### Japan
+    
+```{r}
+ggplot(japan, aes(x = Alcohol, y = Year, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis_c(name = "Alcohol in L", option = "C")+ 
+  coord_cartesian(clip = "off") + 
+  theme_minimal()+
+  labs(title = "Average alcohol consumption per person (in L)", 
+       caption = "A:2000 ; B:2001 ; C:2002 ; D:2003 ; E:2004 ; F:2005 ; G:2006 ; H:2007\n I: 2008 ; J:2009 ; K:2010 ; L:2011; M:2012 ; N:2013 ; O:2014 ; P:2015")
+```
+
+### Oman
+    
+```{r}
+ggplot(oman, aes(x = Alcohol, y = Year, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis_c(name = "Alcohol in L", option = "C")+
+  coord_cartesian(clip = "off") + 
+  theme_minimal()+
+  labs(title = "Average alcohol consumption per person (in L)", 
+       caption = "A:2000 ; B:2001 ; C:2002 ; D:2003 ; E:2004 ; F:2005 ; G:2006 ; H:2007\n I: 2008 ; J:2009 ; K:2010 ; L:2011; M:2012 ; N:2013 ; O:2014 ; P:2015")
+```
+
+### South Korea
+    
+```{r}
+ggplot(kor, aes(x = Alcohol, y = Year, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis_c(name = "Alcohol in L", option = "C")+
+  coord_cartesian(clip = "off") + 
+  theme_minimal()+
+  labs(title = "Average alcohol consumption per person (in L)", 
+       caption = "A:2000 ; B:2001 ; C:2002 ; D:2003 ; E:2004 ; F:2005 ; G:2006 ; H:2007\n I: 2008 ; J:2009 ; K:2010 ; L:2011; M:2012 ; N:2013 ; O:2014 ; P:2015")
+```
+
+### Singapore
+    
+```{r}
+ggplot(singapore, aes(x = Alcohol, y = Year, fill = stat(x))) +
+  geom_density_ridges_gradient() +
+  scale_fill_viridis_c(name = "Alcohol in L", option = "C")+
+  coord_cartesian(clip = "off") + 
+  theme_minimal()+
+  labs(title = "Average alcohol consumption per person (in L)", 
+       caption = "A:2000 ; B:2001 ; C:2002 ; D:2003 ; E:2004 ; F:2005 ; G:2006 ; H:2007\n I: 2008 ; J:2009 ; K:2010 ; L:2011; M:2012 ; N:2013 ; O:2014 ; P:2015")
+```
+
+BMI
+=====================================  
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### China
+    
+```{r}
+x = dch$BMI;
+y = dch$Life.expectancy;
+fig <- plot_ly(dch, x = x, y = ~y, type = 'scatter', mode = 'lines+markers' ,
+        text = ~paste("Year:", dch$Year),
+        hovertemplate = '%{text}<br>BMI: %{x:.2f}<br>Life expectency: %{y:.2f}<extra></extra>' ,
+        marker = list(size = 20,color = '#FF6700'),
+        line = list(color = '#6A0DAD')
+        )
+
+fig <- fig %>% layout(
+  xaxis = list(title = 'Body Mass Index'),
+  yaxis = list(title = 'Life Expectancy'),
+  title = list(title = 'Life Expectancy vs BMI'),
+  showlegend = FALSE
+
+)
+config(fig, scrollZoom = TRUE)
+```
+
+### India
+    
+```{r}
+x = din$BMI;
+y = din$Life.expectancy;
+fig <- plot_ly(din, x = x, y = ~y, type = 'scatter', mode = 'lines+markers' ,
+        text = ~paste("Year:", din$Year),
+        hovertemplate = '%{text}<br>BMI: %{x:.2f}<br>Life expectency: %{y:.2f}<extra></extra>' ,
+        marker = list(size = 20,color = '#FF6700'),
+        line = list(color = '#6A0DAD')
+        )
+
+fig <- fig %>% layout(
+  xaxis = list(title = 'Body Mass Index'),
+  yaxis = list(title = 'Life Expectancy'),
+  title = list(title = 'Life Expectancy vs BMI'),
+  showlegend = FALSE
+
+)
+config(fig, scrollZoom = TRUE)
+```
+
+### Japan
+    
+```{r}
+x = djp$BMI;
+y = djp$Life.expectancy;
+fig <- plot_ly(djp, x = x, y = ~y, type = 'scatter', mode = 'lines+markers' ,
+        text = ~paste("Year:", djp$Year),
+        hovertemplate = '%{text}<br>BMI: %{x:.2f}<br>Life expectency: %{y:.2f}<extra></extra>' ,
+        marker = list(size = 20,color = '#FF6700'),
+        line = list(color = '#6A0DAD')
+        )
+
+fig <- fig %>% layout(
+  xaxis = list(title = 'Body Mass Index'),
+  yaxis = list(title = 'Life Expectancy'),
+  title = list(title = 'Life Expectancy vs BMI'),
+  showlegend = FALSE
+
+)
+config(fig, scrollZoom = TRUE)
+```
+
+### Oman
+    
+```{r}
+x = dom$BMI;
+y = dom$Life.expectancy;
+fig <- plot_ly(dom, x = x, y = ~y, type = 'scatter', mode = 'lines+markers' ,
+        text = ~paste("Year:", dom$Year),
+        hovertemplate = '%{text}<br>BMI: %{x:.2f}<br>Life expectency: %{y:.2f}<extra></extra>' ,
+        marker = list(size = 20,color = '#FF6700'),
+        line = list(color = '#6A0DAD')
+        )
+
+fig <- fig %>% layout(
+  xaxis = list(title = 'Body Mass Index'),
+  yaxis = list(title = 'Life Expectancy'),
+  title = list(title = 'Life Expectancy vs BMI'),
+  showlegend = FALSE
+
+)
+config(fig, scrollZoom = TRUE)
+```
+
+### South Korea
+    
+```{r}
+x = dkr$BMI;
+y = dkr$Life.expectancy;
+fig <- plot_ly(dkr, x = x, y = ~y, type = 'scatter', mode = 'lines+markers' ,
+        text = ~paste("Year:", dkr$Year),
+        hovertemplate = '%{text}<br>BMI: %{x:.2f}<br>Life expectency: %{y:.2f}<extra></extra>' ,
+        marker = list(size = 20,color = '#FF6700'),
+        line = list(color = '#6A0DAD')
+        )
+
+fig <- fig %>% layout(
+  xaxis = list(title = 'Body Mass Index'),
+  yaxis = list(title = 'Life Expectancy'),
+  title = list(title = 'Life Expectancy vs BMI'),
+  showlegend = FALSE
+
+)
+config(fig, scrollZoom = TRUE)
+```
+
+### Singapore
+    
+```{r}
+x = dsg$BMI;
+y = dsg$Life.expectancy;
+fig <- plot_ly(dsg, x = x, y = ~y, type = 'scatter', mode = 'lines+markers' ,
+        text = ~paste("Year:", dsg$Year),
+        hovertemplate = '%{text}<br>BMI: %{x:.2f}<br>Life expectency: %{y:.2f}<extra></extra>' ,
+        marker = list(size = 20,color = '#FF6700'),
+        line = list(color = '#6A0DAD')
+        )
+
+fig <- fig %>% layout(
+  xaxis = list(title = 'Body Mass Index'),
+  yaxis = list(title = 'Life Expectancy'),
+  title = list(title = 'Life Expectancy vs BMI'),
+  showlegend = FALSE
+
+)
+config(fig, scrollZoom = TRUE)
+```
+
+Deaths by Diseases
+=====================================  
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### China
+    
+```{r}
+y = dch$Year;
+polio = dch$Polio;
+aids = dch$HIV;
+diptheria = dch$Diptheria;
+data <- data.frame(y, polio, aids, diptheria);
+
+fig <- plot_ly(data, x = ~polio, y = ~y, type = 'bar', orientation = 'h', name = 'Polio',
+               marker = list(color = '#D9514EFF'))
+
+fig <- fig %>% add_trace(x = ~aids, name = 'AIDS',
+                         marker = list(color = '#EDFF00FF'))
+
+fig <- fig %>% add_trace(x = ~diptheria, name = 'Diptheria',
+                         marker = list(color = '#FF3EA5FF'))
+
+fig <- fig %>% layout(barmode = 'group',
+                      xaxis = list(title = "Values"),
+                      yaxis = list(title ="Years"))
+
+fig
+config(fig, scrollZoom = TRUE)
+```
+
+### India
+    
+```{r}
+y = din$Year;
+polio = din$Polio;
+aids = din$HIV;
+diptheria = din$Diptheria;
+data <- data.frame(y, polio, aids, diptheria);
+
+fig <- plot_ly(data, x = ~polio, y = ~y, type = 'bar', orientation = 'h', name = 'Polio',
+               marker = list(color = '#D9514EFF'))
+
+fig <- fig %>% add_trace(x = ~aids, name = 'AIDS',
+                         marker = list(color = '#EDFF00FF'))
+
+fig <- fig %>% add_trace(x = ~diptheria, name = 'Diptheria',
+                         marker = list(color = '#FF3EA5FF'))
+
+fig <- fig %>% layout(barmode = 'group',
+                      xaxis = list(title = "Values"),
+                      yaxis = list(title ="Years"))
+
+fig
+config(fig, scrollZoom = TRUE)
+```
+
+### Japan
+    
+```{r}
+y = djp$Year;
+polio = djp$Polio;
+aids = djp$HIV;
+diptheria = djp$Diptheria;
+data <- data.frame(y, polio, aids, diptheria);
+
+fig <- plot_ly(data, x = ~polio, y = ~y, type = 'bar', orientation = 'h',  name = 'Polio',
+               marker = list(color = '#D9514EFF'))
+
+fig <- fig %>% add_trace(x = ~aids, name = 'AIDS',
+                         marker = list(color = '#EDFF00FF'))
+
+fig <- fig %>% add_trace(x = ~diptheria, name = 'Diptheria',
+                         marker = list(color = '#FF3EA5FF'))
+
+fig <- fig %>% layout(barmode = 'group',
+                      xaxis = list(title = "Values"),
+                      yaxis = list(title ="Years"))
+
+fig
+config(fig, scrollZoom = TRUE)
+```
+
+### Oman
+    
+```{r}
+y = dom$Year;
+polio = dom$Polio;
+aids = dom$HIV;
+diptheria = dom$Diptheria;
+data <- data.frame(y, polio, aids, diptheria);
+
+fig <- plot_ly(data, x = ~polio, y = ~y, type = 'bar', orientation = 'h', name = 'Polio',
+               marker = list(color = '#D9514EFF'))
+
+fig <- fig %>% add_trace(x = ~aids, name = 'AIDS',
+                         marker = list(color = '#EDFF00FF'))
+
+fig <- fig %>% add_trace(x = ~diptheria, name = 'Diptheria',
+                         marker = list(color = '#FF3EA5FF'))
+
+fig <- fig %>% layout(barmode = 'group',
+                      xaxis = list(title = "Values"),
+                      yaxis = list(title ="Years"))
+
+fig
+config(fig, scrollZoom = TRUE)
+```
+
+### South Korea
+    
+```{r}
+y = dkr$Year;
+polio = dkr$Polio;
+aids = dkr$HIV;
+diptheria = dkr$Diptheria;
+data <- data.frame(y, polio, aids, diptheria);
+
+fig <- plot_ly(data, x = ~polio, y = ~y, type = 'bar', orientation = 'h', name = 'Polio',
+               marker = list(color = '#D9514EFF'))
+
+fig <- fig %>% add_trace(x = ~aids, name = 'AIDS',
+                         marker = list(color = '#EDFF00FF'))
+
+fig <- fig %>% add_trace(x = ~diptheria, name = 'Diptheria',
+                         marker = list(color = '#FF3EA5FF'))
+
+fig <- fig %>% layout(barmode = 'group',
+                      xaxis = list(title = "Values"),
+                      yaxis = list(title ="Years"))
+
+fig
+config(fig, scrollZoom = TRUE)
+```
+
+### Singapore
+    
+```{r}
+y = dsg$Year;
+polio = dsg$Polio;
+aids = dsg$HIV;
+diptheria = dsg$Diptheria;
+data <- data.frame(y, polio, aids, diptheria);
+
+fig <- plot_ly(data, x = ~polio, y = ~y, type = 'bar', orientation = 'h', name = 'Polio',
+               marker = list(color = '#D9514EFF'))
+
+fig <- fig %>% add_trace(x = ~aids, name = 'AIDS',
+                         marker = list(color = '#EDFF00FF'))
+
+fig <- fig %>% add_trace(x = ~diptheria, name = 'Diptheria',
+                         marker = list(color = '#FF3EA5FF'))
+
+fig <- fig %>% layout(barmode = 'group',
+                      xaxis = list(title = "Values"),
+                      yaxis = list(title ="Years"))
+
+fig
+config(fig, scrollZoom = TRUE)
+```
+Health Expenditure
+=====================================  
+
+### Bubble Chart
+    
+```{r}
+data <- read.csv("./shrav.csv");
+
+health_expenditure <- list()
+pop_dens <- list()
+
+for(i in 2000:2015) {
+  expectancy_data = subset(data, Year == i);
+  health_expenditure[[i-1999]] = expectancy_data$Total.expenditure* expectancy_data$GDP;
+  pop_dens[[i-1999]] = expectancy_data$Population.Density/3;
+}
+
+plot <- plot_ly()
+plot <- plot %>% add_trace(x = health_expenditure[1], y = subset(data, Year == 2000)$Life.expectancy, type = "scatter", color = subset(data, Year == 2000)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[1], opacity = 0.5), 
+                           text = ~list(paste('Country: ',subset(data, Year == 2000)$Country,'<br>Population Density: ', subset(data, Year == 2000)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2000)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2000)$Total.expenditure*subset(data, Year == 2000)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[2], y = subset(data, Year == 2001)$Life.expectancy, type = "scatter", color = subset(data, Year == 2001)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[2], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2001)$Country,'<br>Population Density: ', subset(data, Year == 2001)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2001)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2001)$Total.expenditure*subset(data, Year == 2001)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[3], y = subset(data, Year == 2002)$Life.expectancy, type = "scatter", color = subset(data, Year == 2002)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[3], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2002)$Country,'<br>Population Density: ', subset(data, Year == 2002)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2002)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2002)$Total.expenditure*subset(data, Year == 2002)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[4], y = subset(data, Year == 2003)$Life.expectancy, type = "scatter", color = subset(data, Year == 2003)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[4], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2003)$Country,'<br>Population Density: ', subset(data, Year == 2003)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2003)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2003)$Total.expenditure*subset(data, Year == 2003)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[5], y = subset(data, Year == 2004)$Life.expectancy, type = "scatter", color = subset(data, Year == 2004)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[5], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2004)$Country,'<br>Population Density: ', subset(data, Year == 2004)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2004)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2004)$Total.expenditure*subset(data, Year == 2004)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[6], y = subset(data, Year == 2005)$Life.expectancy, type = "scatter", color = subset(data, Year == 2005)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[6], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2005)$Country,'<br>Population Density: ', subset(data, Year == 2005)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2005)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2005)$Total.expenditure*subset(data, Year == 2005)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[7], y = subset(data, Year == 2006)$Life.expectancy, type = "scatter", color = subset(data, Year == 2006)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[7], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2006)$Country,'<br>Population Density: ', subset(data, Year == 2006)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2006)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2006)$Total.expenditure*subset(data, Year == 2006)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[8], y = subset(data, Year == 2007)$Life.expectancy, type = "scatter", color = subset(data, Year == 2007)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[8], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2007)$Country,'<br>Population Density: ', subset(data, Year == 2007)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2007)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2007)$Total.expenditure*subset(data, Year == 2007)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[9], y = subset(data, Year == 2008)$Life.expectancy, type = "scatter", color = subset(data, Year == 2008)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[9], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2008)$Country,'<br>Population Density: ', subset(data, Year == 2008)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2008)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2008)$Total.expenditure*subset(data, Year == 2008)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[10], y = subset(data, Year == 2009)$Life.expectancy, type = "scatter", color = subset(data, Year == 2009)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[10], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2009)$Country,'<br>Population Density: ', subset(data, Year == 2009)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2009)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2009)$Total.expenditure*subset(data, Year == 2009)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[11], y = subset(data, Year == 2010)$Life.expectancy, type = "scatter", color = subset(data, Year == 2010)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[11], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2010)$Country,'<br>Population Density: ', subset(data, Year == 2010)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2010)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2010)$Total.expenditure*subset(data, Year == 2010)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[12], y = subset(data, Year == 2011)$Life.expectancy, type = "scatter", color = subset(data, Year == 2011)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[12], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2011)$Country,'<br>Population Density: ', subset(data, Year == 2011)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2011)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2011)$Total.expenditure*subset(data, Year == 2011)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[13], y = subset(data, Year == 2012)$Life.expectancy, type = "scatter", color = subset(data, Year == 2012)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[13], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2012)$Country,'<br>Population Density: ', subset(data, Year == 2012)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2012)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2012)$Total.expenditure*subset(data, Year == 2012)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[14], y = subset(data, Year == 2013)$Life.expectancy, type = "scatter", color = subset(data, Year == 2013)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[14], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2013)$Country,'<br>Population Density: ', subset(data, Year == 2013)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2013)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2013)$Total.expenditure*subset(data, Year == 2013)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[15], y = subset(data, Year == 2014)$Life.expectancy, type = "scatter", color = subset(data, Year == 2014)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[15], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2014)$Country,'<br>Population Density: ', subset(data, Year == 2014)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2014)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2014)$Total.expenditure*subset(data, Year == 2014)$GDP)), hoverinfo = 'text')
+
+plot <- plot %>% add_trace(x = health_expenditure[16], y = subset(data, Year == 2015)$Life.expectancy, type = "scatter", color = subset(data, Year == 2015)$Country, mode = "markers", 
+                           marker = list(size = pop_dens[16], opacity = 0.5), visible = FALSE,
+                           text = ~list(paste('Country: ',subset(data, Year == 2015)$Country,'<br>Population Density: ', subset(data, Year == 2015)$Population.Density, '<br>Life Expectancy: ',subset(data, Year == 2015)$Life.expectancy, '<br>Health Expenditure: ',subset(data, Year == 2015)$Total.expenditure*subset(data, Year == 2015)$GDP)), hoverinfo = 'text')
+
+updatemenus_list <- list(list(y = 0.5, buttons = list(
+  list(method = "restyle",
+       args = list("visible", list(TRUE,TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2000),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, TRUE,TRUE, TRUE, TRUE, TRUE, TRUE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2001),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, TRUE,TRUE, TRUE, TRUE, TRUE, TRUE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2002),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, TRUE,TRUE, TRUE, TRUE, TRUE, TRUE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2003),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,TRUE,TRUE, TRUE,TRUE, TRUE, TRUE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2004),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2005),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2006),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2007),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2008),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2009),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2010),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2011),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2012),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2013),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE)),
+       label = 2014),
+  list(method = "restyle",
+       args = list("visible", list(FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE, FALSE,FALSE, FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE,FALSE,FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE,FALSE, FALSE,FALSE,TRUE, TRUE, TRUE, TRUE, TRUE, TRUE)),
+       label = 2015)
+)))
+
+plot <- plot %>% layout(
+  xaxis = list(title = 'Health Expenditure (in USD)'),
+  yaxis = list(title = 'Life Expectancy (in years)'),
+  updatemenus = updatemenus_list
+)
+
+config(plot, scrollZoom = TRUE)
+
+
+```
+Deaths in Age groups
+=====================================  
+
+### Grouped Bar Chart
+    
+```{r}
+library(plotly)
+library(ggplot2)
+library(readxl)
+
+data <- read.csv("./shrav.csv");
+
+x <- subset(data, Year == 2015)$Country
+
+
+fig <- plot_ly(x = x)
+
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2000)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"));
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2000)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"));
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2000)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"));
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2001)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2001)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2001)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2002)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2002)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2002)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2003)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2003)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2003)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2004)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2004)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2004)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2005)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2005)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2005)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2006)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2006)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2006)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2007)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2007)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2007)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2008)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2008)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2008)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"));
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2009)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2009)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2009)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2010)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2010)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2010)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2011)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2011)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2011)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2012)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2012)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2012)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2013)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2013)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2013)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2014)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2014)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2014)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2015)$Adult.Mortality , name = 'Adult Mortality', marker = list(color = "red"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2015)$Life.expectancy, name = 'Life Expectancy', marker = list(color = "orange"), visible=FALSE);
+fig <- fig %>% add_trace(y = ~subset(data, Year == 2015)$under.five.deaths , name = 'Under-Five deaths', marker = list(color = "yellow"), visible=FALSE);
+
+updatemenus_list <- list(list(y = 0.5, buttons = list(
+  list(method = "restyle",
+       args = list("visible", list(TRUE,TRUE,TRUE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2000),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2001),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2002),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2003),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2004),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2005),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2006),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE, TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2007),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2008),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2009),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2010),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, TRUE,TRUE,TRUE,FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2011),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE)),
+       label = 2012),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE)),
+       label = 2013),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE,TRUE,TRUE,FALSE, FALSE, FALSE)),
+       label = 2014),
+  list(method = "restyle",
+       args = list("visible", list(FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,FALSE, FALSE, FALSE,TRUE, TRUE, TRUE)),
+       label = 2015)
+)))
+
+fig <- fig %>% layout(
+  title = "Countrywise Health Chart",
+  xaxis = list(domain = c(0.1, 1)),
+  yaxis = list(title = "Value"),
+  updatemenus = updatemenus_list
+)
+
+fig
+
+```
+
+Dataset
+=====================================  
+```{r}
+kable(dataF)
+```
+
+Correlation
+=====================================  
+
+Column {.tabset}
+-------------------------------------
+    
+### BMI
+    
+```{r}
+BMI = read.csv("./BMI.csv")
+
+ggscatter(BMI, x = 'BMI', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "BMI", ylab = "Life Expectancy")
+```
+
+### Population Density
+
+```{r}
+data = read.csv("./shrav.csv")
+
+ggscatter(data, x = 'Population.Density', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "Population Density", ylab = "Life Expectancy (in years)");
+```
+
+### Adult Mortality
+
+```{r}
+data = read.csv("./shrav.csv")
+ggscatter(data, x = 'Adult.Mortality', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "Adult Mortality", ylab = "Life Expectancy (in years)");
+```
+
+### Under 5 Deaths
+
+```{r}
+data = read.csv("./shrav.csv")
+ggscatter(data, x = "under.five.deaths", y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "under-five deaths", ylab = "Life Expectancy (in years)");
+```
+
+### Health Expenditure
+
+```{r}
+data = read.csv("./shrav.csv")
+health_exp = data$GDP * data$Total.expenditure;
+data <- data.frame(data, health_exp)
+ggscatter(data, x = 'health_exp', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "Health Expenditure (in USD)", ylab = "Life Expectancy (in years)");
+```
+
+### Alcohol
+
+```{r}
+data = read.csv("./EditedValuesAlc.csv")
+
+ggscatter(data, x = 'Alcohol', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "Alcohol", ylab = "Life Expectancy")
+```
+
+### Polio
+
+```{r}
+data = read.csv("./EditedValues.csv")
+
+ggscatter(data, x = 'Polio', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "Polio", ylab = "Life Expectancy")
+```
+
+### Diptheria
+
+```{r}
+data = read.csv("./EditedValues.csv")
+
+ggscatter(data, x = 'Diptheria', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "Diptheria", ylab = "Life Expectancy")
+```
+
+### HIV/AIDS
+
+```{r}
+data = read.csv("./EditedValues.csv")
+
+ggscatter(data, x = 'HIV', y = 'Life.expectancy', add = "reg.line", conf.int = TRUE, cor.coef = TRUE, cor.method = "pearson", xlab = "HIV/AIDS", ylab = "Life Expectancy")
+```
+
+Column {.tabset}
+-------------------------------------
+   
+### BMI
+    
+```{r}
+BMI = read.csv("./BMI.csv")
+corr1 <- cor.test(BMI$BMI, BMI$Life.expectancy, method = "pearson")
+corr1
+```
+
+### Population Density
+
+```{r}
+data = read.csv("./shrav.csv")
+corr1 <- cor.test(data$Population.Density, data$Life.expectancy, method = "pearson")
+corr1
+```
+
+### Adult Mortality
+
+```{r}
+data = read.csv("./shrav.csv")
+corr1 <- cor.test(data$Adult.Mortality, data$Life.expectancy, method = "pearson")
+corr1
+```
+
+### Under 5 Deaths
+
+```{r}
+data = read.csv("./shrav.csv")
+corr1 <- cor.test(data$under.five.deaths, data$Life.expectancy, method = "pearson")
+corr1
+```
+
+### Health Expenditure
+
+```{r}
+data = read.csv("./shrav.csv")
+
+corr2 <- cor.test(health_exp, data$Life.expectancy, method = "pearson")
+corr2
+```
+
+### Alcohol
+
+```{r}
+data = read.csv("./EditedValuesAlc.csv")
+corr1 <- cor.test(data$Alcohol, data$Life.expectancy, method = "pearson")
+corr1
+```
+
+### Polio
+
+```{r}
+data = read.csv("./EditedValues.csv")
+corr1 <- cor.test(data$Polio, data$Life.expectancy, method = "pearson")
+corr1
+```
+
+### Diptheria
+
+```{r}
+data = read.csv("./EditedValues.csv")
+corr1 <- cor.test(data$Diptheria, data$Life.expectancy, method = "pearson")
+corr1
+```
+
+### HIV/AIDS
+
+```{r}
+data = read.csv("./EditedValues.csv")
+corr1 <- cor.test(data$HIV, data$Life.expectancy, method = "pearson")
+corr1
+```
