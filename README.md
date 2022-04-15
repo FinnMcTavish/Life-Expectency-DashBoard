@@ -1,6 +1,8 @@
 # Life-Expectency-DashBoard
 A Dashboard made using R Language
 
+This dashboard depicits the statistical data of life expectancy of asian countries as a comparision of life expectancy of India. Statistical Graphs like scaterplot,barplot etc are shown in the dashboard. Analysis of these graphs are done using tools like regression and corelation tests.
+
 Libraries to Install:
   1) flexdashboard
   2) knitr
